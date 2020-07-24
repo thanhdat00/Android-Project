@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     EditText expressionText;
     TextView resultText;
+    TextView targetText;
     String result;
     Button addBtn;
     int screenState;
@@ -35,10 +37,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("expression", expressionText.getText().toString());
-        TextView textView = (TextView) findViewById(R.id.targetCurrency);
-        outState.putString("target", textView.getText().toString());
+        Log.d("TAG", "onSaveInstanceState: ");
+        //outState.putString("expression", expressionText.getText().toString());
+        outState.putString("baseCurrency", resultText.getText().toString());
+        outState.putString("targetCurrency", targetText.getText().toString());
     }
+
+
 
 //    @Override
 //    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
@@ -48,85 +53,98 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //
 //    }
 
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
 
-        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT)
-        {
-            setContentView(R.layout.activity_main);
-            Log.d("TAG1", "portrait");
-        }
-        else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
-        {
-            setContentView(R.layout.landscape_layout);
-            Log.d("TAG1", "Landscape");
-        }
-        inputExpression();
-        super.onConfigurationChanged(newConfig);
 
-    }
+//    @Override
+//    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+//
+//        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT)
+//        { Log.d("TAG1", "portrait");
+//            setContentView(R.layout.activity_main);
+//
+//        }
+//        else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
+//        {    Log.d("TAG1", "Landscape");
+//            setContentView(R.layout.activity_main);
+//
+//        }
+//        inputExpression();
+//        super.onConfigurationChanged(newConfig);
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("TAG", "onCreate: ");
+
+
+
+
+        //Configuration config = getResources().getConfiguration();
+
+        //onConfigurationChanged(config);
+        setContentView(R.layout.activity_main);
+        createObj();
+
         if (savedInstanceState != null)
         {
-            Log.d("TAG", savedInstanceState.getString("expression"));
-            expressionText.setText(savedInstanceState.getString("expression"));
-            TextView editText = (TextView) findViewById(R.id.targetCurrency);
-            editText.setText(savedInstanceState.getString("target"));
-           // Log.d("TAG", savedInstanceState.getString("target"));
+            resultText.setText(savedInstanceState.getString("baseCurrency"));
+            targetText.setText(savedInstanceState.getString("targetCurrency"));
         }
-        Configuration config = getResources().getConfiguration();
 
-        onConfigurationChanged(config);
-        //setContentView(R.layout.activity_main);
+        inputExpression();
             //setList();
     }
 
     // Do setOnClickListener for all buttons
     private void inputExpression() {
-        expressionText = (EditText) findViewById(R.id.expression);
-        resultText = (TextView) findViewById(R.id.baseCurrency);
+
         addBtn = (Button) findViewById(R.id.add_btn);
         for (int i = 0; i < idButtons.length; i++) {
             findViewById(idButtons[i]).setOnClickListener(this);
         }
     }
 
-    private void setList() {
-        final ListView listView = (ListView) findViewById(R.id.CountryList);
-
-        ArrayList<Country> countryArrayList = new ArrayList<>();
-
-        createList(countryArrayList);
-
-        CountryAdapter countryAdapter = new CountryAdapter(this, countryArrayList);
-        listView.setAdapter(countryAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-
-                TextView textView = (TextView) view.findViewById(R.id.country_name);
-                TextView textView1 = (TextView) view.findViewById(R.id.currency_name);
-                ImageView imageView = (ImageView) view.findViewById(R.id.country_flag);
-
-
-                ImageView countryFlag = (ImageView) findViewById(R.id.targetFlag);
-                countryFlag.setBackground(imageView.getDrawable());
-
-                TextView targetCountry = (TextView) findViewById(R.id.CountryName);
-                targetCountry.setText(textView.getText());
-
-                TextView targetCurrency = (TextView) findViewById(R.id.targetCurrency);
-                targetCurrency.setText(textView1.getText());
-                TextView targetCurrency2 = (TextView) findViewById(R.id.targetCurrencyBottom);
-                targetCurrency2.setText(textView1.getText());
-
-                evaluate();
-            }
-        });
+    private void createObj() {
+        targetText = (TextView) findViewById(R.id.targetCurrency);
+        expressionText = (EditText) findViewById(R.id.expression);
+        resultText = (TextView) findViewById(R.id.baseCurrency);
+        screenState =0;
     }
+
+//    private void setList() {
+//        final ListView listView = (ListView) findViewById(R.id.CountryList);
+//
+//        ArrayList<Country> countryArrayList = new ArrayList<>();
+//
+//        createList(countryArrayList);
+//
+//        CountryAdapter countryAdapter = new CountryAdapter(this, countryArrayList);
+//        listView.setAdapter(countryAdapter);
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+//
+//                TextView textView = (TextView) view.findViewById(R.id.country_name);
+//                TextView textView1 = (TextView) view.findViewById(R.id.currency_name);
+//                ImageView imageView = (ImageView) view.findViewById(R.id.country_flag);
+//
+//
+//                ImageView countryFlag = (ImageView) findViewById(R.id.targetFlag);
+//                countryFlag.setBackground(imageView.getDrawable());
+//
+//                TextView targetCountry = (TextView) findViewById(R.id.CountryName);
+//                targetCountry.setText(textView.getText());
+//
+//                TextView targetCurrency = (TextView) findViewById(R.id.targetCurrency);
+//                targetCurrency.setText(textView1.getText());
+//                TextView targetCurrency2 = (TextView) findViewById(R.id.targetCurrencyBottom);
+//                targetCurrency2.setText(textView1.getText());
+//
+//                evaluate();
+//            }
+//        });
+//    }
 
     private void createList(ArrayList<Country> countryArrayList) {
         Country US = new Country("USA", "us", "USA Dollar",false);
