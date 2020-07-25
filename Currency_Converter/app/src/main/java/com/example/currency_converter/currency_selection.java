@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -20,6 +21,8 @@ public class currency_selection extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.d("TAG", "onCreate22: ");
 
         setContentView(R.layout.activity_currency_selection);
 
@@ -41,7 +44,7 @@ public class currency_selection extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
-                targetArrayList.add( selectionCountryAdapter.getItem(position));
+                targetArrayList.add(countryArrayList.get(position));
                 countryArrayList.remove(position);
 
                 selectionCountryAdapter.notifyDataSetChanged();
@@ -52,11 +55,11 @@ public class currency_selection extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent1 = new Intent(currency_selection.this,MainActivity.class);
+                    Intent intent1 = new Intent();
 
-//                intent1.putExtra("ListBack",countryArrayList);
-//
-//                intent1.putExtra("targetListChange", targetArrayList);
+                    intent1.putExtra("ListBack",countryArrayList);
+
+                     intent1.putExtra("targetListChange", targetArrayList);
 
                     setResult(RESULT_OK, intent1);
                     finish();  // calls on Destroy

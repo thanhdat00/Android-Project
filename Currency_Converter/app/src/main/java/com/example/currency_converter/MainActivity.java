@@ -34,12 +34,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int REQ_CODE = 0;
     ArrayList<Country> countryArrayList = new ArrayList<>();
     ArrayList<Country> targetArrayList = new ArrayList<>();
+    CountryAdapter countryAdapter = null;
     int screenState;
     int[] idButtons = {
             R.id.num0, R.id.num1, R.id.num2, R.id.num3, R.id.num4,
             R.id.num5, R.id.num6, R.id.num7, R.id.num8, R.id.num9,
             R.id.plus, R.id.sub, R.id.divine, R.id.mullti, R.id.Dot, R.id.delete, R.id.equal,
-            R.id.add_btn
     };
 
 //    @Override
@@ -67,7 +67,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         createList();
         setList();
-       inputExpression();
+        inputExpression();
+
+        Button button = (findViewById(R.id.add_btn));
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                intentExecute();
+
+            }
+        });
+
     }
 
     // Do setOnClickListener for all buttons
@@ -94,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                countryAdapter.remove(targetArrayList.get(position));
+
                 countryArrayList.add(targetArrayList.get(position));
                 targetArrayList.remove(targetArrayList.get(position));
 
@@ -131,10 +141,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 expressionText.setText("");
                 return;
             }
-            if (id == R.id.add_btn)
-            {
-                intentExecute();
-            }
 
             if (id == idButtons[i] && id != R.id.equal && id != R.id.add_btn) {
                 String text = ((Button) findViewById(id)).getText().toString();
@@ -165,8 +171,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         {
             if (requestCode == REQ_CODE && data != null)
             {
-                //countryArrayList = (ArrayList<Country>) data.getSerializableExtra("ListBack");
-               // targetArrayList = (ArrayList<Country>) data.getSerializableExtra("targetListChange");
+                Log.d("TAG", "onActivityResult: ");
+                countryArrayList = (ArrayList<Country>) data.getSerializableExtra("ListBack");
+                targetArrayList = (ArrayList<Country>) data.getSerializableExtra("targetListChange");
+                setList();
             }
         }
     }
