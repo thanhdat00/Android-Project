@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class CountryAdapter extends ArrayAdapter<Country> {
@@ -31,14 +33,13 @@ public class CountryAdapter extends ArrayAdapter<Country> {
             viewHolder.flag = (ImageView) convertView.findViewById(R.id.country_flag);
             viewHolder.countryName = (TextView) convertView.findViewById(R.id.country_name);
             viewHolder.countryCurrency = (TextView) convertView.findViewById(R.id.currency_name);
+            viewHolder.amount = (TextView) convertView.findViewById(R.id.convertAmount);
             convertView.setTag(viewHolder);
         }
         else
         {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-
-        //displayInfo(position, convertView, viewHolder);
 
         Country country = this.getItem(position);
         viewHolder.countryName.setText(country.getName());
@@ -47,27 +48,9 @@ public class CountryAdapter extends ArrayAdapter<Country> {
         int imageId = getMipmapResIdByName(country.getFlagName());
         viewHolder.flag.setImageResource(imageId);
 
+        viewHolder.amount.setText(toString().valueOf(country.getAmount()));
+
         return convertView;
-    }
-
-    private View createRow(int position, ListView parent, ViewHolder viewHolder) {
-        View itemView = LayoutInflater.from(this.getContext()).inflate(R.layout.country_layout1, null);
-        viewHolder = new ViewHolder();
-        viewHolder.flag = (ImageView) itemView.findViewById(R.id.country_flag);
-        viewHolder.countryName = (TextView) itemView.findViewById(R.id.country_name);
-        viewHolder.countryCurrency = (TextView) itemView.findViewById(R.id.currency_name);
-        itemView.setTag(viewHolder);
-
-        return itemView;
-    }
-
-    private void displayInfo(int position, View itemView, ViewHolder viewHolder) {
-        Country country = getItem(position);
-        viewHolder.countryName.setText(country.getName());
-        viewHolder.countryCurrency.setText(country.getCurrency());
-
-        int imageId = getMipmapResIdByName(country.getFlagName());
-        viewHolder.flag.setImageResource(imageId);
     }
 
     public int getMipmapResIdByName(String flagName) {
@@ -81,6 +64,7 @@ public class CountryAdapter extends ArrayAdapter<Country> {
         ImageView flag;
         TextView countryName;
         TextView countryCurrency;
+        TextView amount;
     }
 
 }

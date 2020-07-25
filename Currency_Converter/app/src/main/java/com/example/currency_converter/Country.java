@@ -1,17 +1,22 @@
 package com.example.currency_converter;
 
-public class Country {
+import java.io.Serializable;
+
+public class Country implements Serializable {
 
     String flagName;
     String name;
     String currency;
+    int amount;
     boolean inTargetList;
 
-    public Country(String name, String flagName, String currency, boolean inTargetList) {
+
+    public Country(String name, String flagName, String currency, int amount, boolean inTargetList) {
         this.name = name;
         this.flagName = flagName;
         this.currency = currency;
         this.inTargetList = false;
+        this.amount = amount;
     }
 
     public void setFlagName(String flagName) {
@@ -41,5 +46,18 @@ public class Country {
     public String getCurrency() {
         return currency;
     }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public boolean isInTargetList() {
+        return inTargetList;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
 
 }
