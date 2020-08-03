@@ -7,11 +7,11 @@ public class Country implements Serializable {
     String flagName;
     String name;
     String currency;
-    int amount;
+    double amount;
     boolean inTargetList;
 
 
-    public Country(String name, String flagName, String currency, int amount, boolean inTargetList) {
+    public Country(String name, String flagName, String currency, double amount, boolean inTargetList) {
         this.name = name;
         this.flagName = flagName;
         this.currency = currency;
@@ -47,7 +47,7 @@ public class Country implements Serializable {
         return currency;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return amount;
     }
 
@@ -55,7 +55,7 @@ public class Country implements Serializable {
         return inTargetList;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 

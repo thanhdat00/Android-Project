@@ -6,35 +6,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.w3c.dom.Text;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class CountryAdapter extends ArrayAdapter<Country> implements Serializable {
-    public CountryAdapter(Context context, ArrayList<Country> countryArrayList) {
+public class SelectionListAdapter extends ArrayAdapter<Country> implements Serializable {
+    public SelectionListAdapter(Context context, ArrayList<Country> countryArrayList) {
         super(context,0,countryArrayList);
     }
 
-    @NonNull
-    @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         ViewHolder viewHolder = new ViewHolder();
         if (convertView == null)
         {
             //convertView = createRow(position, (ListView) parent, viewHolder);
-            convertView =LayoutInflater.from(this.getContext()).inflate(R.layout.country_layout1, null);
+            convertView =LayoutInflater.from(this.getContext()).inflate(R.layout.item_selection_list, null);
             viewHolder = new ViewHolder();
             viewHolder.flag = (ImageView) convertView.findViewById(R.id.country_flag);
             viewHolder.countryName = (TextView) convertView.findViewById(R.id.country_name);
             viewHolder.countryCurrency = (TextView) convertView.findViewById(R.id.currency_name);
-            viewHolder.amount = (TextView) convertView.findViewById(R.id.convertAmount);
             convertView.setTag(viewHolder);
         }
         else
@@ -48,8 +42,6 @@ public class CountryAdapter extends ArrayAdapter<Country> implements Serializabl
 
         int imageId = getMipmapResIdByName(country.getFlagName());
         viewHolder.flag.setImageResource(imageId);
-
-        viewHolder.amount.setText(toString().valueOf(country.getAmount()));
 
         return convertView;
     }
@@ -65,7 +57,6 @@ public class CountryAdapter extends ArrayAdapter<Country> implements Serializabl
         ImageView flag;
         TextView countryName;
         TextView countryCurrency;
-        TextView amount;
     }
 
 }

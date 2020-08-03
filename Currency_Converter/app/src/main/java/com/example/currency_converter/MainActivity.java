@@ -42,14 +42,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             R.id.plus, R.id.sub, R.id.divine, R.id.mullti, R.id.Dot, R.id.delete, R.id.equal,
     };
 
-//    @Override
-//    protected void onSaveInstanceState(@NonNull Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        Log.d("TAG", "onSaveInstanceState: ");
-//        //outState.putString("expression", expressionText.getText().toString());
-//        outState.putString("baseCurrency", resultText.getText().toString());
-//        outState.putString("targetCurrency", targetText.getText().toString());
-//    }
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString("baseCurrency", resultText.getText().toString());
+
+        outState.putSerializable("countryArrayList", countryArrayList);
+        outState.putSerializable("targetArrayList", targetArrayList);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,14 +59,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setContentView(R.layout.activity_main);
         createObj();
-//
-//        if (savedInstanceState != null)
-//        {
-//            resultText.setText(savedInstanceState.getString("baseCurrency"));
-//            targetText.setText(savedInstanceState.getString("targetCurrency"));
-//        }
 
-        createList();
+        if (savedInstanceState != null) {
+            resultText.setText(savedInstanceState.getString("baseCurrency"));
+            countryArrayList = (ArrayList<Country>) savedInstanceState.getSerializable("countryArrayList");
+            targetArrayList = (ArrayList<Country>) savedInstanceState.getSerializable("targetArrayList");
+        }
+        else {
+            createList();
+        }
+
         setList();
         inputExpression();
 
@@ -74,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View view) {
                 intentExecute();
-
             }
         });
 
@@ -105,9 +107,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
+                targetArrayList.get(position).setAmount(0);
                 countryArrayList.add(targetArrayList.get(position));
                 targetArrayList.remove(targetArrayList.get(position));
-
                 countryAdapter.notifyDataSetChanged();
             }
         });
@@ -148,7 +150,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return;
             }
             if (id == R.id.equal) {
-                //evaluate();
+                evaluate();
+                setList();
             }
         }
     }
@@ -179,40 +182,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-//    public void evaluate() {
-//
-//        String s = expressionText.getText().toString();
-//        CurrencyConverter helper = new CurrencyConverter(s);
-//        result = helper.calculate(s);
-//        if (result.equals("BAD EXPRESSION"))
-//        {
-//            expressionText.setText("BAD EXPRESSION");
-//            return;
-//        }
-//        resultText.setText(result);
-//        TextView convertCountry = (TextView) findViewById(R.id.CountryName);
-//        s = convertCountry.getText().toString();
-//        TextView targetCurrency = (TextView) findViewById(R.id.targetCurrency);
-//
-//        double convertResult;
-//        switch (s) {
-//            case "USA" :
-//                convertResult = Double.parseDouble(result) * 0.000043;
-//                targetCurrency.setText(String.valueOf(convertResult));
-//                break;
-//            case "Japan" :
-//                convertResult = Double.parseDouble(result) * 0.0046;
-//                targetCurrency.setText(String.valueOf(convertResult));
-//                break;
-//            case "EU" :
-//                convertResult = Double.parseDouble(result) * 0.000038;
-//                targetCurrency.setText(String.valueOf(convertResult));
-//                break;
-//            case "Russia" :
-//                convertResult = Double.parseDouble(result) * 0.0031;
-//                targetCurrency.setText(String.valueOf(convertResult));
-//                break;
-//        }
-//    }
+    public void evaluate() {
+
+        String s = expressionText.getText().toString();
+        CurrencyConverter helper = new CurrencyConverter(s);
+        result = helper.calculate(s);
+        if (result.equals("BAD EXPRESSION")) {
+            expressionText.setText("BAD EXPRESSION");
+            return;
+        }
+        resultText.setText(result);
+
+        ListView listView = findViewById(R.id.CountryList);
+
+        for (int i = 0; i < targetArrayList.size(); i++)
+        {
+            double convertResult = 0;
+            String countryName = targetArrayList.get(i).getName();
+            switch (countryName) {
+                case "USA" :
+                    convertResult = Double.parseDouble(result) * 0.000043;;
+                    break;
+                case "Japan" :
+                    convertResult = Double.parseDouble(result) * 0.0046;
+                    break;
+                case "EU" :
+                    convertResult = Double.parseDouble(result) * 0.000038;
+                    break;
+                case "Russia" :
+                    convertResult = Double.parseDouble(result) * 0.0031;
+                    break;
+            }
+            targetArrayList.get(i).setAmount(convertResult);
+        }
+    }
 
 }

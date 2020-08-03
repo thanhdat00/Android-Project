@@ -36,8 +36,8 @@ public class currency_selection extends AppCompatActivity {
 
         ListView listView = (ListView) findViewById(R.id.selection_list);
 
-        final CountryAdapter selectionCountryAdapter =
-                new CountryAdapter(this, countryArrayList);
+        final SelectionListAdapter selectionCountryAdapter =
+                new SelectionListAdapter(this, countryArrayList);
 
         listView.setAdapter(selectionCountryAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -46,7 +46,6 @@ public class currency_selection extends AppCompatActivity {
 
                 targetArrayList.add(countryArrayList.get(position));
                 countryArrayList.remove(position);
-
                 selectionCountryAdapter.notifyDataSetChanged();
             }
         });
